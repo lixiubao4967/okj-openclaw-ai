@@ -18,8 +18,11 @@ openclaw onboard --install-daemon
 
 ### AI Provider
 
+OpenClaw 原生支持 20+ AI Provider（OpenAI、Anthropic、Moonshot AI、Google、xAI、Mistral、Qwen、百度千帆、OpenRouter 等），onboard 向导中直接选择即可。
+
 - **Anthropic（Claude）**：公司团队账号，API Key 从 `console.anthropic.com` 获取
-- **其他平台**（OpenAI、OpenRouter 等）：使用免费账号
+- **Moonshot AI（Kimi K2.5）**：API Key 从 Moonshot 平台获取，支持 Kimi K2.5 + Kimi Coding
+- **其他平台**（OpenAI、OpenRouter 等）：使用对应平台账号
 
 ### 平台账号说明
 
