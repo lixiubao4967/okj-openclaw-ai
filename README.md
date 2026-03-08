@@ -107,8 +107,10 @@ openclaw --version
 安装完成后，运行 Onboard 向导完成首次配置（约 5-10 分钟）：
 
 ```bash
-openclaw onboard
+openclaw onboard --install-daemon
 ```
+
+> `--install-daemon` 会在向导完成后自动将 OpenClaw 注册为系统守护进程（macOS 使用 launchd，Linux 使用 systemd），实现开机自启、后台持续运行。
 
 向导将引导你完成以下配置：
 
