@@ -15,12 +15,14 @@
 3. [环境要求](#环境要求)
 4. [安装步骤](#安装步骤)
 5. [初始化配置（Onboard 向导）](#初始化配置)
-6. [基本使用](#基本使用)
-7. [技能扩展（Skills & ClawHub）](#技能扩展)
-8. [作为后台服务运行](#作为后台服务运行)
-9. [环境变量参考](#环境变量参考)
-10. [常见问题](#常见问题)
-11. [延伸阅读](#延伸阅读)
+6. [Telegram 配对授权](#telegram-配对授权)
+7. [基本使用](#基本使用)
+8. [技能扩展（Skills & ClawHub）](#技能扩展)
+9. [Hooks 自动化](#hooks-自动化)
+10. [作为后台服务运行](#作为后台服务运行)
+11. [环境变量参考](#环境变量参考)
+12. [常见问题](#常见问题)
+13. [延伸阅读](#延伸阅读)
 
 ---
 
@@ -147,11 +149,80 @@ openclaw onboard --install-daemon
    | Custom Provider | 自定义端点 |
 
 2. **输入 API Key**：粘贴对应平台的 API Key
-3. **配置消息渠道（Gateway）**：选择 Telegram、WhatsApp、Slack 等
-4. **设置工作区路径（Workspace）**：本地存储技能和记忆文件的目录
-5. **安装初始技能**：可选择安装推荐的基础技能
+
+3. **配置网络搜索（Web Search）**（可选）：让 Agent 能实时联网查询信息
+
+   | Provider | 特点 |
+   |----------|------|
+   | Perplexity Search | 结构化结果，支持域名/语言/时效过滤，搜索质量高 |
+   | Brave Search | 独立搜索引擎，隐私友好 |
+   | Gemini (Google Search) | 接入 Google 搜索，结果全面 |
+   | Grok (xAI) | 适合实时信息查询 |
+   | Kimi (Moonshot) | 若已有 Moonshot API Key 可直接复用 |
+
+   > 若已选择 Moonshot AI 作为 AI Provider，Web Search 选择 **Kimi (Moonshot)** 可复用同一个 API Key，无需额外申请。
+
+4. **配置消息渠道（Gateway）**：选择 Telegram、WhatsApp、Slack 等
+
+5. **配置技能（Skills）**：
+
+   Onboard 时会扫描本地技能状态，例如：
+   ```
+   Eligible: 4          # 可直接安装
+   Missing requirements: 47  # 缺少依赖（通常需要额外 API Key）
+   ```
+
+   以下技能需要额外配置对应的 API Key 才能启用：
+
+   | 技能 | 所需环境变量 | 说明 |
+   |------|-------------|------|
+   | `goplaces` | `GOOGLE_PLACES_API_KEY` | Google 地点搜索 |
+   | `nano-banana-pro` | `GEMINI_API_KEY` | Gemini 模型相关功能 |
+   | `notion` | `NOTION_API_KEY` | Notion 文档操作 |
+   | `openai-image-gen` | `OPENAI_API_KEY` | AI 图片生成 |
+   | `openai-whisper-api` | `OPENAI_API_KEY` | 语音转文字 |
+   | `sag` | `ELEVENLABS_API_KEY` | 文字转语音 |
+
+6. **配置 Hooks（自动化钩子）**（可选）：在 Agent 执行特定命令时自动触发操作，详见 [Hooks 自动化](#hooks-自动化)
+
+7. **选择启动方式（Hatch）**：
+
+   | 选项 | 说明 |
+   |------|------|
+   | Hatch in TUI（推荐） | 在终端界面运行，轻量快速 |
+   | Open the Web UI | 打开浏览器图形界面，更直观 |
+   | Do this later | 跳过，稍后手动启动 |
+
+8. **设置工作区路径（Workspace）**：本地存储技能和记忆文件的目录
 
 > 建议至少配置一个**备用模型（Fallback Model）**，防止主模型达到速率限制时中断服务。
+
+---
+
+## Telegram 配对授权
+
+首次在 Telegram 中向 Bot 发送消息时，Bot 会回复如下内容：
+
+```
+OpenClaw: access not configured.
+
+Your Telegram user id: <你的用户ID>
+
+Pairing code: XXXXXXXX
+
+Ask the bot owner to approve with:
+openclaw pairing approve telegram XXXXXXXX
+```
+
+此时需要在本机终端执行授权命令：
+
+```bash
+openclaw pairing approve telegram <配对码>
+```
+
+授权成功后即可在 Telegram 中正常与 OpenClaw 对话，下达任务指令。
+
+> 每个新用户首次使用都需要 Bot 所有者执行一次授权，这是安全机制，防止陌生人使用你的 Bot。
 
 ---
 
@@ -235,6 +306,35 @@ openclaw skills remove <skill-name>
 | `browser` | 浏览器自动化 |
 
 > **安全提示**：第三方技能视为不可信代码，安装前请先阅读其源码。
+
+---
+
+## Hooks 自动化
+
+Hooks 是 OpenClaw 的自动化钩子，在 Agent 执行特定命令（如 `/new`、`/reset`）时自动触发预设操作。
+
+官方文档：[docs.openclaw.ai/automation/hooks](https://docs.openclaw.ai/automation/hooks)
+
+### 内置 Hooks
+
+| Hook | 说明 |
+|------|------|
+| `boot-md` | 启动时自动加载指定 Markdown 文件作为上下文 |
+| `bootstrap-extra-files` | 启动时初始化额外的配置或资源文件 |
+| `command-logger` | 记录所有 Agent 命令到日志文件，便于审计 |
+| `session-memory` | 执行 `/new` 或 `/reset` 时自动将当前会话上下文保存到记忆文件 |
+
+### 启用/禁用 Hooks
+
+在 onboard 向导中可以多选启用，也可以在配置文件中手动管理：
+
+```bash
+# 查看已启用的 Hooks
+openclaw hooks list
+
+# 启用某个 Hook
+openclaw hooks enable session-memory
+```
 
 ---
 
