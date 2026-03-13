@@ -147,13 +147,16 @@ Ask the bot owner to approve with:
 openclaw pairing approve telegram XXXXXXXX
 ```
 
-3. 在虚拟机中执行授权命令：
+3. 在 macOS 上**另开一个终端窗口**，进入虚拟机执行授权命令（TUI 窗口不用关）：
 
 ```bash
+orb shell openclaw
 openclaw pairing approve telegram <配对码>
 ```
 
 授权成功后即可在 Telegram 中正常使用 OpenClaw。
+
+> 💡 如需再次进入 TUI 界面：`openclaw hatch tui`
 
 ---
 
