@@ -179,8 +179,12 @@ openclaw logs
 # 查看已安装技能
 openclaw skills list
 
-# 安装新技能
-openclaw skills install <skill-name>
+# 安装新技能（ClawHub 官方市场）
+clawhub install <skill-name>
+
+# 安装第三方技能（GitHub 仓库）
+npx skills add <GitHub-URL>
+# 例如：npx skills add https://github.com/JimLiu/baoyu-skills/tree/main/skills/baoyu-post-to-wechat
 ```
 
 ### OrbStack 虚拟机管理
