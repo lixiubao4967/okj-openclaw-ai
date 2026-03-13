@@ -15,7 +15,17 @@
 
 ---
 
-## 第一步：安装 Node.js 22
+## 第一步：安装系统依赖
+
+Ubuntu 24.04 最小安装默认不包含 git，OpenClaw 安装时需要用到：
+
+```bash
+sudo apt update && sudo apt install -y git
+```
+
+---
+
+## 第二步：安装 Node.js 22
 
 Ubuntu 24.04 自带的 Node.js 版本不满足要求，使用 nvm 安装：
 
@@ -38,7 +48,7 @@ npm --version
 
 ---
 
-## 第二步：安装 OpenClaw
+## 第三步：安装 OpenClaw
 
 ```bash
 npm install -g openclaw@latest
@@ -49,7 +59,7 @@ openclaw --version
 
 ---
 
-## 第三步：Onboard 初始化向导
+## 第四步：Onboard 初始化向导
 
 ```bash
 openclaw onboard --install-daemon
@@ -71,7 +81,7 @@ openclaw onboard --install-daemon
 
 ---
 
-## 第四步：验证服务状态
+## 第五步：验证服务状态
 
 ```bash
 # 查看 systemd 服务状态
@@ -86,7 +96,7 @@ openclaw logs
 
 ---
 
-## 第五步：Telegram 配对授权
+## 第六步：Telegram 配对授权
 
 1. 在 Telegram 中向你的 Bot 发送任意消息
 2. Bot 回复配对码，格式如下：
