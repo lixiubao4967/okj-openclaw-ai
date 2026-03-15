@@ -17,12 +17,13 @@
 5. [初始化配置（Onboard 向导）](#初始化配置)
 6. [Telegram 配对授权](#telegram-配对授权)
 7. [基本使用](#基本使用)
-8. [技能扩展（Skills & ClawHub）](#技能扩展)
-9. [Hooks 自动化](#hooks-自动化)
-10. [作为后台服务运行](#作为后台服务运行)
-11. [环境变量参考](#环境变量参考)
-12. [常见问题](#常见问题)
-13. [延伸阅读](#延伸阅读)
+8. [多 Agent 管理](#多-agent-管理)
+9. [技能扩展（Skills & ClawHub）](#技能扩展)
+10. [Hooks 自动化](#hooks-自动化)
+11. [作为后台服务运行](#作为后台服务运行)
+12. [环境变量参考](#环境变量参考)
+13. [常见问题](#常见问题)
+14. [延伸阅读](#延伸阅读)
 
 ---
 
@@ -262,6 +263,54 @@ openclaw status
 ```bash
 openclaw logs
 ```
+
+---
+
+## 多 Agent 管理
+
+OpenClaw 支持创建多个独立的 Agent，每个 Agent 拥有独立的工作区、会话和渠道绑定，适用于不同场景（如每日新闻推送、客服、自动化任务等）。
+
+### 创建新 Agent
+
+```bash
+openclaw agents add <agent-name>
+# 例如：
+openclaw agents add dailynews
+```
+
+创建过程中的交互步骤：
+
+| 步骤 | 说明 |
+|------|------|
+| **Workspace directory** | 新 Agent 的工作区路径，默认为 `~/.openclaw/workspace-<agent-name>` |
+| **Configure model/auth** | 是否立即为此 Agent 配置 AI 模型和密钥（可选择稍后配置） |
+| **Configure chat channels** | 选择消息渠道（Telegram、WhatsApp、Slack 等），可为新 Agent 绑定独立的 Bot |
+| **Configure DM access policies** | DM 访问策略，默认为 `pairing`（配对模式，需手动授权） |
+| **Route channels to agent** | 将选中的渠道绑定到此 Agent，使消息路由到对应的 Agent 处理 |
+
+### 创建后的目录结构
+
+```
+~/.openclaw/
+├── agents/
+│   ├── main/              ← 默认主 Agent
+│   │   └── sessions/
+│   └── dailynews/         ← 新创建的 Agent
+│       └── sessions/
+├── workspace/             ← 主 Agent 工作区
+├── workspace-dailynews/   ← 新 Agent 独立工作区
+└── openclaw.json          ← 全局配置（含 Agent 和渠道绑定信息）
+```
+
+### 为新 Agent 绑定 Telegram Bot
+
+如果为新 Agent 配置了独立的 Telegram Bot，首次在 Telegram 中向该 Bot 发消息时同样需要配对授权：
+
+```bash
+openclaw pairing approve telegram <配对码>
+```
+
+> **提示**：每个 Agent 可以绑定不同的 Telegram Bot（不同的 Bot Token），实现一个 Bot 对应一个 Agent 的独立服务。
 
 ---
 
