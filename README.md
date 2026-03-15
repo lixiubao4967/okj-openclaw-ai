@@ -305,7 +305,41 @@ openclaw skills remove <skill-name>
 | `summarize` | 文本摘要 |
 | `browser` | 浏览器自动化 |
 
-> **安全提示**：第三方技能视为不可信代码，安装前请先阅读其源码。
+### 安装第三方技能（GitHub 仓库）
+
+除 ClawHub 外，还可以通过 `npx skills` CLI 工具从 GitHub 仓库直接安装技能：
+
+```bash
+npx skills add <GitHub-URL>
+# 例如：
+npx skills add https://github.com/vercel-labs/skills/tree/main/skills/find-skills
+```
+
+安装过程中的选项说明：
+
+| 选项 | 说明 |
+|------|------|
+| **Installation scope** | `Global`（全局，所有项目可用）或 `Local`（仅当前项目） |
+| **Installation method** | `Symlink`（推荐，符号链接，自动同步更新）或 `Copy`（独立副本，不自动更新） |
+| **Security Risk Assessments** | 三个引擎（Gen / Socket / Snyk）对技能代码的安全扫描结果 |
+
+### 技能存储结构与加载机制
+
+`npx skills` 是一个独立的跨代理工具技能包管理器（[skills.sh](https://skills.sh)），与 OpenClaw 本身无关。选择全局安装时，目录结构如下：
+
+```
+~/.agents/skills/<skill-name>        ← 全局技能实际文件（skills CLI 管理）
+        ↑ symlink
+~/.openclaw/skills/<skill-name>      ← OpenClaw 的技能目录（符号链接指向全局）
+        ↑
+OpenClaw 运行时从这里加载技能
+```
+
+- **`~/.agents/skills/`** — `skills` CLI 的全局存储路径，一份文件可被多个 AI 代理工具共享（OpenClaw、Cline、Cursor 等）
+- **`~/.openclaw/skills/`** — OpenClaw 自身的技能目录，通过 symlink 关联到全局
+- **更新一次全部生效** — 更新 `~/.agents/skills/` 下的源文件，所有链接过去的工具同步更新
+
+> **安全提示**：第三方技能视为不可信代码，安装前请先阅读其源码。技能运行时拥有完整的代理权限，请确保信任技能来源。
 
 ---
 
