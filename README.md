@@ -486,6 +486,10 @@ A: 直接备份 `OPENCLAW_HOME` 目录即可，包含所有配置、技能和记
 - [GitHub 主仓库](https://github.com/openclaw/openclaw)
 - [ClawHub 技能市场](https://github.com/openclaw/clawhub)
 
+### 使用案例集
+
+- [Awesome OpenClaw Use Cases](https://github.com/hesamsheikh/awesome-openclaw-usecases) — 社区维护的 OpenClaw 真实使用案例合集，收录 40+ 经过验证的实际应用场景，涵盖社交媒体自动化、内容创作、DevOps 运维、生产力工具、研究学习、金融交易等七大类别，帮助你发现 OpenClaw 的更多可能性
+
 ### 社区教程
 
 - [Mastering OpenClaw: Your Ultimate Guide (Medium)](https://medium.com/@vignarajj/mastering-openclaw-your-ultimate-guide-to-setting-up-a-personal-ai-assistant-in-2026-266d8c8e66fb)
